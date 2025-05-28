@@ -3,7 +3,11 @@ const messages = [];
 // emoji button to switch users (change to login system later or sum, add acc workign emojis)
 let currentUser = 'user1';
 document.getElementById('emojiBtn').addEventListener('click', () => {
-  currentUser = currentUser === 'user1' ? 'user2' : 'user1';
+  if (currentUser === 'user1') {
+  currentUser = 'user2';
+} else {
+  currentUser = 'user1';
+}
   alert(`Switched to ${currentUser}`);
 });
 
@@ -16,7 +20,12 @@ function renderMessages() {
   chatBox.innerHTML = ''; // removes existing messages (ignoire since message are local for now, REMOVE when perm storage)
   messages.forEach(msg => {
     const messageEl = document.createElement('div');
-    messageEl.className = `message ${msg.user === 'user1' ? 'right' : 'left'}`;
+    if (msg.user === 'user1') {
+        messageEl.className = 'message right';
+    } else {
+        messageEl.className = 'message left';
+    }
+
 
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
@@ -25,13 +34,8 @@ function renderMessages() {
     const avatar = document.createElement('div');
     avatar.className = 'avatar';
 
-    if (msg.user === 'user1') {
-      messageEl.appendChild(bubble);
-      messageEl.appendChild(avatar);
-    } else {
-      messageEl.appendChild(avatar);
-      messageEl.appendChild(bubble);
-    }
+    messageEl.appendChild(bubble);
+    messageEl.appendChild(avatar);
 
     chatBox.appendChild(messageEl);
   });
@@ -40,7 +44,9 @@ function renderMessages() {
 
 function sendMessage() {
   const text = messageInput.value.trim();
-  if (text === '') return;
+  if (text === ''){
+    return;
+  }
 
   messages.push({
     user: currentUser,
