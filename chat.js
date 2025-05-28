@@ -1,19 +1,19 @@
-// === chat.js ===
-
-// Chat message list
 const messages = [];
 
-// Current user — switch between 'user1' and 'user2' manually for now
+// emoji button to switch users (change to login system later or sum, add acc workign emojis)
 let currentUser = 'user1';
+document.getElementById('emojiBtn').addEventListener('click', () => {
+  currentUser = currentUser === 'user1' ? 'user2' : 'user1';
+  alert(`Switched to ${currentUser}`);
+});
 
-// DOM elements
+
 const chatBox = document.getElementById('chatBox');
 const messageInput = document.getElementById('messageInput');
 const sendBtn = document.getElementById('sendBtn');
 
-// Render messages
 function renderMessages() {
-  chatBox.innerHTML = ''; // Clear existing messages
+  chatBox.innerHTML = ''; // removes existing messages (ignoire since message are local for now, REMOVE when perm storage)
   messages.forEach(msg => {
     const messageEl = document.createElement('div');
     messageEl.className = `message ${msg.user === 'user1' ? 'right' : 'left'}`;
@@ -35,12 +35,9 @@ function renderMessages() {
 
     chatBox.appendChild(messageEl);
   });
-
-  // Scroll to bottom
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
-// Send message
 function sendMessage() {
   const text = messageInput.value.trim();
   if (text === '') return;
@@ -54,16 +51,7 @@ function sendMessage() {
   renderMessages();
 }
 
-// Handle send button click
 sendBtn.addEventListener('click', sendMessage);
-
-// Handle Enter key
 messageInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') sendMessage();
-});
-
-// For now, press emoji button to switch user
-document.getElementById('emojiBtn').addEventListener('click', () => {
-  currentUser = currentUser === 'user1' ? 'user2' : 'user1';
-  alert(`Switched to ${currentUser}`);
 });
