@@ -75,8 +75,8 @@ body {
 .bubble {
   background: var(--white);
   color: black;
-  padding: 16px 20px;
-  border-radius: 12px;
+  padding: 14px 16px;
+  border-radius: 10px;
   max-width: 80%;
   font-size: 1.25rem
 }
