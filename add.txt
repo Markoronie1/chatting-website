@@ -1,0 +1,4 @@
+Hosting from pi:
+Node.js, pm2, DuckDNS, Nginx, Certbox (Let's Encrypt for HTTPS)
+Instructions: https://chatgpt.com/g/g-p-681169cbb86c819182d9e3f9d975d434-chat-app/c/6839e078-5c70-8000-8b04-3d3deaaa2302
+

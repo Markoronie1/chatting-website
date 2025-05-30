@@ -1,4 +1,5 @@
 const messages = [];
+
 let currentUser = 'user1';
 
 // emoji button to switch users (change to login system later or sum, add acc workign emojis)
