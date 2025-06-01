@@ -2,4 +2,5 @@
 5-27 wrote basic code and fixed aligning error<br/>
 5-28 DAY fixed styling a lil use https://liveweave.com/<br/>
 5-28 NIGHT fixed some basic logic and reordered/simplied .css and .js<br/>
-5-29 Resized input box, replaced send emoji with image
+5-29 Resized input box, replaced send emoji with image<br/>
+6-1 Hosting locally on Raspberry Pi 4 with DuckDNS. Port forwarding and Nginx for hosting from pi at home. Transferred backend with Node.js and Express. Added Socket.IO stuff for real time messages. 
