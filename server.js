@@ -27,5 +27,5 @@ app.post('/api/messages', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`server running at http://localhost:${PORT}`);
+  console.log(`server and shi running at http://localhost:${PORT}`);
 });
