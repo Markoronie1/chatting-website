@@ -25,6 +25,7 @@ loginBtn.addEventListener('click', () => {
 
   loginPopup.style.display = 'none';
   chatContainer.style.display = 'flex';
+  avatarBtn.style.display = 'block';
   loadMessages();
 });
 
