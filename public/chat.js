@@ -1,3 +1,5 @@
+const socket = io();
+
 let currentUser = 'user1';
 
 document.getElementById('emojiBtn').addEventListener('click', () => {
@@ -69,7 +71,7 @@ messageInput.addEventListener('keypress', (e) => {
 
 loadMessages();
 
-const socket = io();
+
 
 socket.on('new-message', (message) => {
   loadMessages();
