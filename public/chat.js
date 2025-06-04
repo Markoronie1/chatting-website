@@ -117,9 +117,11 @@ window.addEventListener('load', () => {
   if (savedUser) {
     currentUser = savedUser;
     socket.emit('user-online', savedUser);
-    loginPopup.style.display = 'none';
-    chatContainer.style.display = 'flex';
-    avatarBtn.style.display = 'block';
+    document.getElementById('loginPopup').style.display = 'none';
+    document.querySelector('.chat-container').style.display = 'flex';
+    document.getElementById('avatarButton').style.display = 'block';
     loadMessages();
+  } else {
+    document.getElementById('loginPopup').style.display = 'flex';
   }
 });
