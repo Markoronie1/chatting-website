@@ -56,7 +56,7 @@ async function sendMessage() {
     });
 
     messageInput.value = '';
-    loadMessages();
+    //loadMessages();
   } catch (err) {
     console.error('Failed to send message:', err);
   }
@@ -68,3 +68,9 @@ messageInput.addEventListener('keypress', (e) => {
 });
 
 loadMessages();
+
+const socket = io();
+
+socket.on('new-message', (message) => {
+  loadMessages();
+});
