@@ -1,4 +1,9 @@
 // file upload stuff
+const fs = require('fs');
+const uploadDir = './public/uploads'; //bc it cant find its directory dawg just look its right there
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 const multer = require('multer');
 const path = require('path');
 
@@ -15,8 +20,10 @@ const server = http.createServer(app);
 const io = socketIO(server);
 const PORT = 3000;
 
-// message sending stuff
-app.use(bodyParser.json());
+// message sending stuff that keeps breaking brooooooooo
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(express.static('public'));
 app.use(express.static('public'));
 
 const FILE_PATH = './messages.json';
