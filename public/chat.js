@@ -1,6 +1,9 @@
 const socket = io();
 let currentUser = null;
 
+const avatarForm = document.getElementById('avatarForm');
+const avatarFile = document.getElementById('avatarFile');
+
 const loginPopup = document.getElementById('loginPopup');
 const loginBtn = document.getElementById('loginBtn');
 const usernameInput = document.getElementById('usernameInput');
@@ -48,6 +51,11 @@ function renderMessages(messages) {
     if (isLastInGroup) {
       const avatar = document.createElement('div');
       avatar.className = 'avatar';
+
+      avatar.style.backgroundImage = `url('/uploads/${msg.user}.png')`;
+      avatar.style.backgroundSize = 'cover';
+      avatar.style.backgroundPosition = 'center';
+
       const label = document.createElement('div');
       label.innerText = msg.user;
       label.style.fontSize = '12px';
@@ -124,4 +132,22 @@ window.addEventListener('load', () => {
   } else {
     loginPopup.style.display = 'flex';
   }
-});//a
+});
+
+avatarForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const file = avatarFile.files[0];
+  if (!file || !currentUser) return;
+
+  const formData = new FormData();
+  formData.append('avatar', file);
+  formData.append('username', currentUser);
+
+  const res = await fetch('/api/upload-avatar', {
+    method: 'POST',
+    body: formData
+  });
+
+  const data = await res.json();
+  alert(data.message);
+});
