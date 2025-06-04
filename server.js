@@ -7,16 +7,17 @@ const express = require('express');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const http = require('http');
+const app = express();
 
 // socketIO stuff
 const socketIO = require('socket.io');
-const app = express();
 const server = http.createServer(app);
 const io = socketIO(server);
 const PORT = 3000;
 
 // message sending stuff
-app.use(bodyParser.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 app.use(express.static('public'));
 
 const FILE_PATH = './messages.json';
@@ -71,6 +72,10 @@ io.on('connection', (socket) => {
 });
 
 // file storage stuff
+const uploadDir = './public/uploads'; // pls acc see the folder bro its right there
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 const storage = multer.diskStorage({
   destination: './public/uploads/',
   filename: (req, file, cb) => {
