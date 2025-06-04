@@ -75,47 +75,28 @@ const uploadDir = './public/uploads'; // pls acc see the folder bro its right th
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
-const storage = multer.diskStorage({
-  destination: './public/uploads/',
-  filename: (req, file, cb) => {
-    const rawName = req.body.username || 'unknown';
-    const safeName = rawName.toLowerCase().replace(/[^a-z0-9]/gi, '_');
-    const ext = '.png';
-    cb(null, `${safeName}${ext}`);
-  }
-});
-const upload = multer({
-  storage,
-  fileFilter: (req, file, cb) => {
-    const allowedTypes = ['image/png', 'image/jpeg'];
-    if (allowedTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only PNG and JPEG files are allowed.'));
-    }
-  }
-});
-
 
 // file upload stuff
 app.post('/api/upload-avatar', (req, res) => {
+  const storage = multer.diskStorage({
+    destination: './public/uploads/',
+    filename: (req, file, cb) => {
+      // if username is undefined
+      const rawName = req.body.username || 'unknown';
+      const safeName = rawName.toLowerCase().replace(/[^a-z0-9]/gi, '_'); //dont crash out unc
+      const ext = '.png';
+      cb(null, `${safeName}${ext}`);
+    }
+  });
+
   const upload = multer({
-    storage: multer.diskStorage({
-      destination: './public/uploads/',
-      filename: (req, file, cb) => {
-        // if username is undefined
-        const rawName = req.body.username || 'unknown';
-        const safeName = rawName.toLowerCase().replace(/[^a-z0-9]/gi, '_'); //dont crash out unc
-        const ext = '.png';
-        cb(null, `${safeName}${ext}`);
-      }
-    }),
+    storage,
     fileFilter: (req, file, cb) => {
       const allowedTypes = ['image/png', 'image/jpeg'];
       if (allowedTypes.includes(file.mimetype)) {
         cb(null, true);
       } else {
-        cb(new Error('png and jpeg only'));
+        cb(new Error('Only PNG and JPEG files are allowed.'));
       }
     }
   }).single('avatar');
