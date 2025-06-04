@@ -117,11 +117,11 @@ window.addEventListener('load', () => {
   if (savedUser) {
     currentUser = savedUser;
     socket.emit('user-online', savedUser);
-    document.getElementById('loginPopup').style.display = 'none';
-    document.querySelector('.chat-container').style.display = 'flex';
-    document.getElementById('avatarButton').style.display = 'block';
+    loginPopup.style.display = 'none';
+    chatContainer.style.display = 'flex';
+    avatarBtn.style.display = 'block';
     loadMessages();
   } else {
-    document.getElementById('loginPopup').style.display = 'flex';
+    loginPopup.style.display = 'flex';
   }
-});
+});//a
