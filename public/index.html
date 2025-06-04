@@ -16,7 +16,19 @@
     </div>
   </div>
 
-  <!-- Main Chat Container -->
+  <!-- Avatar Button -->
+  <div id="avatarButton" class="avatar-button" style="display: none;"></div>
+
+  <!-- Avatar Popup -->
+  <div id="avatarPopup" class="avatar-popup" style="display: none;">
+    <div class="avatar-popup-content">
+      <button class="styled-btn">Change Profile Image</button>
+      <button class="styled-btn" id="logoutBtn">Logout</button>
+      <button class="styled-btn" id="closeAvatarPopup">Close</button>
+    </div>
+  </div>
+
+  <!-- Chat Container -->
   <div class="chat-container" style="display: none;">
     <div class="tab-selector">
       <button class="tab active">Public Chat</button>
@@ -29,10 +41,6 @@
       <input type="text" id="messageInput" placeholder="Type your message here..." />
       <span id="emojiBtn">😊</span>
       <button id="sendBtn"> <img src="arrowgrey.png" alt="Send" /> </button>
-    </div>
-
-    <div style="display: flex; justify-content: flex-end; padding: 10px;">
-      <button id="logoutBtn" class="styled-btn">Logout</button>
     </div>
   </div>
 

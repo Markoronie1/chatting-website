@@ -6,6 +6,9 @@ const loginBtn = document.getElementById('loginBtn');
 const usernameInput = document.getElementById('usernameInput');
 const logoutBtn = document.getElementById('logoutBtn');
 const chatContainer = document.querySelector('.chat-container');
+const avatarBtn = document.getElementById('avatarButton');
+const avatarPopup = document.getElementById('avatarPopup');
+const closePopupBtn = document.getElementById('closeAvatarPopup');
 
 loginBtn.addEventListener('click', () => {
   const name = usernameInput.value.trim();
@@ -97,6 +100,26 @@ window.addEventListener('load', () => {
     socket.emit('user-online', savedUser);
     loginPopup.style.display = 'none';
     chatContainer.style.display = 'flex';
+    loadMessages();
+  }
+});
+
+avatarBtn.addEventListener('click', () => {
+  avatarPopup.style.display = avatarPopup.style.display === 'none' ? 'block' : 'none';
+});
+
+closePopupBtn.addEventListener('click', () => {
+  avatarPopup.style.display = 'none';
+});
+
+window.addEventListener('load', () => {
+  const savedUser = localStorage.getItem('username');
+  if (savedUser) {
+    currentUser = savedUser;
+    socket.emit('user-online', savedUser);
+    loginPopup.style.display = 'none';
+    chatContainer.style.display = 'flex';
+    avatarBtn.style.display = 'block';
     loadMessages();
   }
 });
