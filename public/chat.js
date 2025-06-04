@@ -1,22 +1,40 @@
 const socket = io();
+let currentUser = null;
 
-let currentUser = 'user1';
+const loginPopup = document.getElementById('loginPopup');
+const loginBtn = document.getElementById('loginBtn');
+const usernameInput = document.getElementById('usernameInput');
+const logoutBtn = document.getElementById('logoutBtn');
+const chatContainer = document.querySelector('.chat-container');
 
-document.getElementById('emojiBtn').addEventListener('click', () => {
-  currentUser = currentUser === 'user1' ? 'user2' : 'user1';
-  alert(`Switched to ${currentUser}`);
+loginBtn.addEventListener('click', () => {
+  const name = usernameInput.value.trim();
+  if (!name) return;
+
+  currentUser = name;
+  localStorage.setItem('username', name);
+  socket.emit('user-online', name);
+
+  loginPopup.style.display = 'none';
+  chatContainer.style.display = 'flex';
+  loadMessages();
 });
 
-const chatBox = document.getElementById('chatBox');
-const messageInput = document.getElementById('messageInput');
-const sendBtn = document.getElementById('sendBtn');
+logoutBtn.addEventListener('click', () => {
+  socket.emit('user-offline', currentUser);
+  localStorage.removeItem('username');
+  location.reload();
+});
+
+window.addEventListener('beforeunload', () => {
+  socket.emit('user-offline', currentUser);
+});
 
 function renderMessages(messages) {
   chatBox.innerHTML = '';
-
   messages.forEach((msg, index) => {
     const messageEl = document.createElement('div');
-    messageEl.className = msg.user === 'user1' ? 'message right' : 'message left';
+    messageEl.className = msg.user === currentUser ? 'message right' : 'message left';
 
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
@@ -27,7 +45,11 @@ function renderMessages(messages) {
     if (isLastInGroup) {
       const avatar = document.createElement('div');
       avatar.className = 'avatar';
+      const label = document.createElement('div');
+      label.innerText = msg.user;
+      label.style.fontSize = '12px';
       messageEl.appendChild(avatar);
+      messageEl.appendChild(label);
     }
 
     chatBox.appendChild(messageEl);
@@ -46,9 +68,9 @@ async function loadMessages() {
   }
 }
 
-async function sendMessage() {
+sendBtn.addEventListener('click', async () => {
   const text = messageInput.value.trim();
-  if (!text) return;
+  if (!text || !currentUser) return;
 
   try {
     await fetch('/api/messages', {
@@ -56,23 +78,25 @@ async function sendMessage() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ user: currentUser, text })
     });
-
     messageInput.value = '';
-    //loadMessages();
   } catch (err) {
     console.error('Failed to send message:', err);
   }
-}
-
-sendBtn.addEventListener('click', sendMessage);
-messageInput.addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') sendMessage();
 });
 
-loadMessages();
+messageInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') sendBtn.click();
+});
 
+socket.on('new-message', () => loadMessages());
 
-
-socket.on('new-message', (message) => {
-  loadMessages();
+window.addEventListener('load', () => {
+  const savedUser = localStorage.getItem('username');
+  if (savedUser) {
+    currentUser = savedUser;
+    socket.emit('user-online', savedUser);
+    loginPopup.style.display = 'none';
+    chatContainer.style.display = 'flex';
+    loadMessages();
+  }
 });

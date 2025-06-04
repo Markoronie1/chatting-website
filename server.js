@@ -43,3 +43,24 @@ io.on('connection', (socket) => {
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
+
+
+const usersOnline = new Set();
+
+io.on('connection', (socket) => {
+  console.log('A user connected');
+
+  socket.on('user-online', (username) => {
+    usersOnline.add(username);
+    io.emit('user-status', { user: username, status: 'online' });
+  });
+
+  socket.on('user-offline', (username) => {
+    usersOnline.delete(username);
+    io.emit('user-status', { user: username, status: 'offline' });
+  });
+
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
+});

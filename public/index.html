@@ -7,7 +7,17 @@
   <link rel="stylesheet" href="style2.css" />
 </head>
 <body>
-  <div class="chat-container">
+  <!-- login Popup -->
+  <div id="loginPopup" class="popup">
+    <div class="popup-content">
+      <h2 style="color: var(--white); font-size: 28px; margin-bottom: 20px;">Welcome to the Chat</h2>
+      <input type="text" id="usernameInput" placeholder="Enter your username..." />
+      <button id="loginBtn">Enter Chat</button>
+    </div>
+  </div>
+
+  <!-- Main Chat Container -->
+  <div class="chat-container" style="display: none;">
     <div class="tab-selector">
       <button class="tab active">Public Chat</button>
       <button class="tab">DM: User 1</button>
@@ -19,6 +29,10 @@
       <input type="text" id="messageInput" placeholder="Type your message here..." />
       <span id="emojiBtn">😊</span>
       <button id="sendBtn"> <img src="arrowgrey.png" alt="Send" /> </button>
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; padding: 10px;">
+      <button id="logoutBtn" class="styled-btn">Logout</button>
     </div>
   </div>
 

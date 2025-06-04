@@ -156,3 +156,44 @@ input[type="text"]::placeholder {
   height: 24px;
   object-fit: contain;
 }
+
+
+
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.popup-content {
+  background: var(--medium-grey);
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px black;
+  text-align: center;
+}
+
+.popup-content input {
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 16px;
+  width: 100%;
+  border-radius: 6px;
+  border: none;
+}
+
+.popup-content button {
+  padding: 10px 20px;
+  background: var(--blue);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
