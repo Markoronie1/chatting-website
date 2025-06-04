@@ -5,7 +5,6 @@ const path = require('path');
 // express server stuff
 const express = require('express');
 const fs = require('fs');
-const bodyParser = require('body-parser');
 const http = require('http');
 const app = express();
 
@@ -89,11 +88,9 @@ const upload = multer({ storage });
 
 // file upload stuff
 app.post('/api/upload-avatar', upload.single('avatar'), (req, res) => {
-  app.post('/api/upload-avatar', upload.single('avatar'), (req, res) => {
-  console.log('upload detected'); //i better see ts
+  console.log('upload detected'); //pls show up
   console.log('username:', req.body.username);
   console.log('file:', req.file);
 
-  res.json({ message: 'Uploaded successfully', filename: req.file?.filename });
-});
+  res.json({ message: 'uploaded successfully', filename: req.file?.filename });
 });
