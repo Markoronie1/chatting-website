@@ -49,7 +49,7 @@ const usersOnline = new Set();
 
 // online/offline status
 io.on('connection', (socket) => {
-  console.log('A user connected');
+  console.log('user connected');
 
   socket.on('user-online', (username) => {
     usersOnline.add(username);
@@ -62,7 +62,11 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('A user disconnected');
+    console.log('user disconnected');
+  });
+  // detects that someones pfp changed
+  socket.on('avatar-updated', (username) => {
+    io.emit('avatar-updated', username);
   });
 });
 
@@ -81,9 +85,4 @@ const upload = multer({ storage });
 // file upload stuff
 app.post('/api/upload-avatar', upload.single('avatar'), (req, res) => {
   res.json({ message: 'Uploaded successfully', filename: req.file.filename });
-});
-
-// pfp changed
-socket.on('avatar-updated', (username) => {
-  io.emit('avatar-updated', username);
 });
