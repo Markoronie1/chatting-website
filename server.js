@@ -89,5 +89,11 @@ const upload = multer({ storage });
 
 // file upload stuff
 app.post('/api/upload-avatar', upload.single('avatar'), (req, res) => {
-  res.json({ message: 'Uploaded successfully', filename: req.file.filename });
+  app.post('/api/upload-avatar', upload.single('avatar'), (req, res) => {
+  console.log('upload detected'); //i better see ts
+  console.log('username:', req.body.username);
+  console.log('file:', req.file);
+
+  res.json({ message: 'Uploaded successfully', filename: req.file?.filename });
+});
 });

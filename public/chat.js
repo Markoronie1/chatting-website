@@ -148,6 +148,7 @@ avatarFile.addEventListener('change', async () => {
   const formData = new FormData();
   formData.append('avatar', file);
   formData.append('username', currentUser);
+  console.log('Uploading avatar for', currentUser); //pls show up
 
   try {
     const res = await fetch('/api/upload-avatar', {
