@@ -78,19 +78,58 @@ if (!fs.existsSync(uploadDir)) {
 const storage = multer.diskStorage({
   destination: './public/uploads/',
   filename: (req, file, cb) => {
-    const username = req.body.username;
-    const ext = path.extname(file.originalname);
-    cb(null, `${username}${ext}`);
+    const rawName = req.body.username || 'unknown';
+    const safeName = rawName.toLowerCase().replace(/[^a-z0-9]/gi, '_');
+    const ext = '.png';
+    cb(null, `${safeName}${ext}`);
   }
 });
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['image/png', 'image/jpeg'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only PNG and JPEG files are allowed.'));
+    }
+  }
+});
 
 
 // file upload stuff
-app.post('/api/upload-avatar', upload.single('avatar'), (req, res) => {
-  console.log('upload detected'); //pls show up
-  console.log('username:', req.body.username);
-  console.log('file:', req.file);
+app.post('/api/upload-avatar', (req, res) => {
+  const upload = multer({
+    storage: multer.diskStorage({
+      destination: './public/uploads/',
+      filename: (req, file, cb) => {
+        // if username is undefined
+        const rawName = req.body.username || 'unknown';
+        const safeName = rawName.toLowerCase().replace(/[^a-z0-9]/gi, '_'); //dont crash out unc
+        const ext = '.png';
+        cb(null, `${safeName}${ext}`);
+      }
+    }),
+    fileFilter: (req, file, cb) => {
+      const allowedTypes = ['image/png', 'image/jpeg'];
+      if (allowedTypes.includes(file.mimetype)) {
+        cb(null, true);
+      } else {
+        cb(new Error('png and jpeg only'));
+      }
+    }
+  }).single('avatar');
 
-  res.json({ message: 'uploaded successfully', filename: req.file?.filename });
+  upload(req, res, (err) => {
+    if (err) {
+      console.error('Multer error:', err);
+      return res.status(500).json({ error: 'Upload failed' });
+    }
+
+    console.log('upload detected'); //i better see ts every single time bro stop crashing out
+    console.log('username:', req.body.username);
+    console.log('file:', req.file);
+
+    res.json({ message: 'Uploaded successfully', filename: req.file.filename });
+  });
 });
