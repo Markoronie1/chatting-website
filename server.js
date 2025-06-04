@@ -66,11 +66,6 @@ io.on('connection', (socket) => {
   });
 });
 
-// file upload stuff
-app.post('/api/upload-avatar', upload.single('avatar'), (req, res) => {
-  res.json({ message: 'Uploaded successfully', filename: req.file.filename });
-});
-
 // file storage stuff
 const storage = multer.diskStorage({
   destination: './public/uploads/',
@@ -81,3 +76,9 @@ const storage = multer.diskStorage({
   }
 });
 const upload = multer({ storage });
+
+
+// file upload stuff
+app.post('/api/upload-avatar', upload.single('avatar'), (req, res) => {
+  res.json({ message: 'Uploaded successfully', filename: req.file.filename });
+});
