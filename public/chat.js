@@ -146,10 +146,9 @@ avatarFile.addEventListener('change', async () => {
   if (!file || !currentUser) return;
 
   document.getElementById('uploadUsername').value = currentUser;
+
   const formData = new FormData(document.getElementById('avatarForm'));
-  
-  formData.append('avatar', file);
-  formData.append('username', currentUser);
+
   console.log('Uploading avatar for', currentUser); //pls show up
 
   try {
