@@ -82,3 +82,8 @@ const upload = multer({ storage });
 app.post('/api/upload-avatar', upload.single('avatar'), (req, res) => {
   res.json({ message: 'Uploaded successfully', filename: req.file.filename });
 });
+
+// pfp changed
+socket.on('avatar-updated', (username) => {
+  io.emit('avatar-updated', username);
+});

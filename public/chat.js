@@ -54,7 +54,7 @@ function renderMessages(messages) {
       const avatar = document.createElement('div');
       avatar.className = 'avatar';
 
-      avatar.style.backgroundImage = `url('/uploads/${msg.user}.png')`;
+      avatar.style.backgroundImage = `url('/uploads/${msg.user}.png?${Date.now()}')`; // bc ig browser try to cache old shi
       avatar.style.backgroundSize = 'cover';
       avatar.style.backgroundPosition = 'center';
 
@@ -136,30 +136,12 @@ window.addEventListener('load', () => {
   }
 });
 
-avatarForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-  const file = avatarFile.files[0];
-  if (!file || !currentUser) return;
-
-  const formData = new FormData();
-  formData.append('avatar', file);
-  formData.append('username', currentUser);
-
-  const res = await fetch('/api/upload-avatar', {
-    method: 'POST',
-    body: formData
-  });
-
-  const data = await res.json();
-  alert(data.message);
-});
-
 triggerUpload.addEventListener('click', () => {
-  avatarFile.click(); // opens file picker
+  avatarFile.click(); // open file picker
 });
 
-avatarForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
+// sync avatar dawg not working bro
+avatarFile.addEventListener('change', async () => {
   const file = avatarFile.files[0];
   if (!file || !currentUser) return;
 
@@ -167,14 +149,24 @@ avatarForm.addEventListener('submit', async (e) => {
   formData.append('avatar', file);
   formData.append('username', currentUser);
 
-  const res = await fetch('/api/upload-avatar', {
-    method: 'POST',
-    body: formData
-  });
+  try {
+    const res = await fetch('/api/upload-avatar', {
+      method: 'POST',
+      body: formData
+    });
+    const data = await res.json();
 
-  const data = await res.json();
-  alert(data.message);
+    // tell others to reload image
+    socket.emit('avatar-updated', currentUser);
 
-  // reload messages so the new avatar acc shows up
+    // reload image for me
+    loadMessages();
+  } catch (err) {
+    console.error('Upload failed:', err);
+  }
+});
+
+socket.on('avatar-updated', (user) => {
+  // others refresh pfp
   loadMessages();
 });
