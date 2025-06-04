@@ -2,7 +2,9 @@ const socket = io();
 let currentUser = null;
 
 const avatarForm = document.getElementById('avatarForm');
+const triggerUpload = document.getElementById('triggerUpload');
 const avatarFile = document.getElementById('avatarFile');
+
 
 const loginPopup = document.getElementById('loginPopup');
 const loginBtn = document.getElementById('loginBtn');
@@ -150,4 +152,8 @@ avatarForm.addEventListener('submit', async (e) => {
 
   const data = await res.json();
   alert(data.message);
+});
+
+triggerUpload.addEventListener('click', () => {
+  avatarFile.click(); // opens file picker
 });
