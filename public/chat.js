@@ -157,3 +157,24 @@ avatarForm.addEventListener('submit', async (e) => {
 triggerUpload.addEventListener('click', () => {
   avatarFile.click(); // opens file picker
 });
+
+avatarForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const file = avatarFile.files[0];
+  if (!file || !currentUser) return;
+
+  const formData = new FormData();
+  formData.append('avatar', file);
+  formData.append('username', currentUser);
+
+  const res = await fetch('/api/upload-avatar', {
+    method: 'POST',
+    body: formData
+  });
+
+  const data = await res.json();
+  alert(data.message);
+
+  // reload messages so the new avatar acc shows up
+  loadMessages();
+});
