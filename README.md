@@ -9,6 +9,6 @@
 
 
 
-Docs:
-Sharp - https://www.npmjs.com/package/sharp?activeTab=readme
-Multer - https://blog.logrocket.com/multer-nodejs-express-upload-file/
+Docs:<br/>
+Sharp - https://www.npmjs.com/package/sharp?activeTab=readme<br/>
+Multer - https://blog.logrocket.com/multer-nodejs-express-upload-file/<br/>
