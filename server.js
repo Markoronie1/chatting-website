@@ -1,6 +1,7 @@
 // file upload stuff
 const multer = require('multer');
 const path = require('path');
+const sharp = require('sharp');
 
 // express server stuff
 const express = require('express');
@@ -75,20 +76,12 @@ if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-const storage = multer.diskStorage({
-  destination: uploadDir,
-  filename: (req, file, cb) => {
-    const rawName = req.body.username || 'unknown';
-    const safeName = rawName.toLowerCase().replace(/[^a-z0-9]/gi, '_');
-    const ext = path.extname(file.originalname).toLowerCase();
-    cb(null, `${safeName}${ext}`);
-  }
-});
+const storage = multer.memoryStorage(); // use memory storage so sharp can acc process it
 
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['image/png', 'image/jpeg'];
+    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
     if (allowedTypes.includes(file.mimetype)) {
       cb(null, true);
     } else {
@@ -97,23 +90,38 @@ const upload = multer({
   }
 }).single('avatar');
 
-// file upload stuff
+// file upload endpoint
 app.post('/api/upload-avatar', (req, res) => {
-  upload(req, res, (err) => {
+  upload(req, res, async (err) => {
     if (err) {
       console.error('Multer error:', err);
       return res.status(500).json({ error: 'Upload failed' });
     }
 
-    console.log('upload detected');
-    console.log('username:', req.body.username);
-    console.log('file:', req.file);
-    console.log('Saved to:', path.join(__dirname, 'public', 'uploads', req.file.filename));
+    const rawName = req.body.username || 'unknown';
+    const safeName = rawName.toLowerCase().replace(/[^a-z0-9]/gi, '_');
+    const filename = `${safeName}.png`;
+    const filePath = path.join(uploadDir, filename);
 
-    res.json({
-      message: 'Uploaded successfully',
-      filename: req.file.filename,
-      username: req.body.username
-    });
+    try {
+      await sharp(req.file.buffer)
+      //converts to a 128x128 png
+        .resize(128, 128, { fit: 'cover' })
+        .png()
+        .toFile(filePath);
+
+      console.log('upload detected');
+      console.log('username:', req.body.username);
+      console.log('Saved to:', filePath);
+
+      res.json({
+        message: 'Uploaded successfully',
+        filename,
+        username: req.body.username
+      });
+    } catch (error) {
+      console.error('Sharp processing error:', error);
+      res.status(500).json({ error: 'Image processing failed' });
+    }
   });
 });
