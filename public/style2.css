@@ -236,9 +236,4 @@ input[type="text"]::placeholder {
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
-  /*transition: background 0.2s;*/
-}
-
-.styled-btn:hover {
-  background: #1f3c6d;
 }
