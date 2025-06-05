@@ -6,3 +6,9 @@
 6-1 Hosting locally on Raspberry Pi 4 with DuckDNS. Port forwarding and Nginx for hosting from pi at home. Transferred backend with Node.js and Express. Added Socket.IO stuff for real time messages. <br/>
 6-4 NO CLUE WHAT WAS GOING ON BUT ALL MY NEW CHANGES GOT ROLLED BACK I THINK I FINALLY FIXED ALLAT 🙏🙏🙏🙏🙏<br/>
 6-4 NIGHT i think i got image uploads for pfps working 🙏🙏🙏🙏 ts took way too long imma hop on war thunder<br/>
+
+
+
+Docs:
+Sharp - https://www.npmjs.com/package/sharp?activeTab=readme
+Multer - https://blog.logrocket.com/multer-nodejs-express-upload-file/
