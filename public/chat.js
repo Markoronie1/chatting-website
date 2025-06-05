@@ -25,6 +25,12 @@ loginBtn.addEventListener('click', () => {
   loginPopup.style.display = 'none';
   chatContainer.style.display = 'flex';
   avatarBtn.style.display = 'block';
+
+  const avatarFile = localStorage.getItem(`avatar_${currentUser}`) || `${currentUser}.png`;
+  avatarBtn.style.backgroundImage = `url('/uploads/${avatarFile}?${Date.now()}')`;
+  avatarBtn.style.backgroundSize = 'cover';
+  avatarBtn.style.backgroundPosition = 'center';
+
   loadMessages();
 });
 
@@ -112,6 +118,12 @@ window.addEventListener('load', () => {
     loginPopup.style.display = 'none';
     chatContainer.style.display = 'flex';
     avatarBtn.style.display = 'block';
+
+    const avatarFile = localStorage.getItem(`avatar_${currentUser}`) || `${currentUser}.png`;
+    avatarBtn.style.backgroundImage = `url('/uploads/${avatarFile}?${Date.now()}')`;
+    avatarBtn.style.backgroundSize = 'cover';
+    avatarBtn.style.backgroundPosition = 'center';
+
     loadMessages();
   } else {
     loginPopup.style.display = 'flex';
@@ -149,6 +161,12 @@ avatarFile.addEventListener('change', async () => {
 
     if (data.filename && data.username) {
       localStorage.setItem(`avatar_${data.username}`, data.filename);
+
+      if (data.username === currentUser) {
+        avatarBtn.style.backgroundImage = `url('/uploads/${data.filename}?${Date.now()}')`;
+        avatarBtn.style.backgroundSize = 'cover';
+        avatarBtn.style.backgroundPosition = 'center';
+      }
     }
 
     socket.emit('avatar-updated', currentUser);
