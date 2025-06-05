@@ -26,7 +26,7 @@ loginBtn.addEventListener('click', () => {
   chatContainer.style.display = 'flex';
   avatarBtn.style.display = 'block';
 
-  const avatarFile = localStorage.getItem(`avatar_${currentUser}`) || `${currentUser}.png`;
+  const avatarFile = `${currentUser.toLowerCase().replace(/[^a-z0-9]/gi, '_')}.png`;
   avatarBtn.style.backgroundImage = `url('/uploads/${avatarFile}?${Date.now()}')`;
   avatarBtn.style.backgroundSize = 'cover';
   avatarBtn.style.backgroundPosition = 'center';
@@ -60,8 +60,8 @@ function renderMessages(messages) {
       const avatar = document.createElement('div');
       avatar.className = 'avatar';
 
-      const storedFilename = localStorage.getItem(`avatar_${msg.user}`) || `${msg.user}.png`;
-      avatar.style.backgroundImage = `url('/uploads/${storedFilename}?${Date.now()}')`;
+      const avatarFile = `${msg.user.toLowerCase().replace(/[^a-z0-9]/gi, '_')}.png`;
+      avatar.style.backgroundImage = `url('/uploads/${avatarFile}?${Date.now()}')`;
       avatar.style.backgroundSize = 'cover';
       avatar.style.backgroundPosition = 'center';
 
@@ -119,7 +119,7 @@ window.addEventListener('load', () => {
     chatContainer.style.display = 'flex';
     avatarBtn.style.display = 'block';
 
-    const avatarFile = localStorage.getItem(`avatar_${currentUser}`) || `${currentUser}.png`;
+    const avatarFile = `${currentUser.toLowerCase().replace(/[^a-z0-9]/gi, '_')}.png`;
     avatarBtn.style.backgroundImage = `url('/uploads/${avatarFile}?${Date.now()}')`;
     avatarBtn.style.backgroundSize = 'cover';
     avatarBtn.style.backgroundPosition = 'center';
@@ -160,8 +160,6 @@ avatarFile.addEventListener('change', async () => {
     const data = await res.json();
 
     if (data.filename && data.username) {
-      localStorage.setItem(`avatar_${data.username}`, data.filename);
-
       if (data.username === currentUser) {
         avatarBtn.style.backgroundImage = `url('/uploads/${data.filename}?${Date.now()}')`;
         avatarBtn.style.backgroundSize = 'cover';
