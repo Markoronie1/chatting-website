@@ -228,7 +228,7 @@ input[type="text"]::placeholder {
   gap: 10px;
 }
 
-.styled-button {
+.styled-btn {
   padding: 10px 20px;
   background: var(--blue);
   color: white;
@@ -236,9 +236,4 @@ input[type="text"]::placeholder {
   border-radius: 8px;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.2s;
-}
-
-.styled-button:hover {
-  background: #1f3c6d;
 }
