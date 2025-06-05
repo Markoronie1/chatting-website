@@ -44,7 +44,6 @@ server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
-
 const usersOnline = new Set();
 
 // online/offline status
@@ -71,18 +70,17 @@ io.on('connection', (socket) => {
 });
 
 // file storage stuff
-const uploadDir = './public/uploads'; // pls acc see the folder bro its right there
+const uploadDir = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
 const storage = multer.diskStorage({
-  destination: './public/uploads/',
+  destination: uploadDir,
   filename: (req, file, cb) => {
-    // if username is undefined
     const rawName = req.body.username || 'unknown';
-    const safeName = rawName.toLowerCase().replace(/[^a-z0-9]/gi, '_'); //dont crash out unc
-    const ext = '.png';
+    const safeName = rawName.toLowerCase().replace(/[^a-z0-9]/gi, '_');
+    const ext = path.extname(file.originalname).toLowerCase();
     cb(null, `${safeName}${ext}`);
   }
 });
@@ -107,10 +105,15 @@ app.post('/api/upload-avatar', (req, res) => {
       return res.status(500).json({ error: 'Upload failed' });
     }
 
-    console.log('upload detected'); //i better see ts every single time bro stop crashing out
+    console.log('upload detected');
     console.log('username:', req.body.username);
     console.log('file:', req.file);
+    console.log('Saved to:', path.join(__dirname, 'public', 'uploads', req.file.filename));
 
-    res.json({ message: 'Uploaded successfully', filename: req.file.filename });
+    res.json({
+      message: 'Uploaded successfully',
+      filename: req.file.filename,
+      username: req.body.username
+    });
   });
 });

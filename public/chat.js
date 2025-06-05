@@ -5,7 +5,6 @@ const avatarForm = document.getElementById('avatarForm');
 const triggerUpload = document.getElementById('triggerUpload');
 const avatarFile = document.getElementById('avatarFile');
 
-
 const loginPopup = document.getElementById('loginPopup');
 const loginBtn = document.getElementById('loginBtn');
 const usernameInput = document.getElementById('usernameInput');
@@ -55,7 +54,8 @@ function renderMessages(messages) {
       const avatar = document.createElement('div');
       avatar.className = 'avatar';
 
-      avatar.style.backgroundImage = `url('/uploads/${msg.user}.png?${Date.now()}')`; // bc ig browser try to cache old shi
+      const storedFilename = localStorage.getItem(`avatar_${msg.user}`) || `${msg.user}.png`;
+      avatar.style.backgroundImage = `url('/uploads/${storedFilename}?${Date.now()}')`;
       avatar.style.backgroundSize = 'cover';
       avatar.style.backgroundPosition = 'center';
 
@@ -111,7 +111,10 @@ window.addEventListener('load', () => {
     socket.emit('user-online', savedUser);
     loginPopup.style.display = 'none';
     chatContainer.style.display = 'flex';
+    avatarBtn.style.display = 'block';
     loadMessages();
+  } else {
+    loginPopup.style.display = 'flex';
   }
 });
 
@@ -123,25 +126,10 @@ closePopupBtn.addEventListener('click', () => {
   avatarPopup.style.display = 'none';
 });
 
-window.addEventListener('load', () => {
-  const savedUser = localStorage.getItem('username');
-  if (savedUser) {
-    currentUser = savedUser;
-    socket.emit('user-online', savedUser);
-    loginPopup.style.display = 'none';
-    chatContainer.style.display = 'flex';
-    avatarBtn.style.display = 'block';
-    loadMessages();
-  } else {
-    loginPopup.style.display = 'flex';
-  }
-});
-
 triggerUpload.addEventListener('click', () => {
-  avatarFile.click(); // open file picker
+  avatarFile.click();
 });
 
-// sync avatar dawg not working bro
 avatarFile.addEventListener('change', async () => {
   const file = avatarFile.files[0];
   if (!file || !currentUser) return;
@@ -150,7 +138,7 @@ avatarFile.addEventListener('change', async () => {
 
   const formData = new FormData(document.getElementById('avatarForm'));
 
-  console.log('Uploading avatar for', currentUser); //pls show up
+  console.log('Uploading avatar for', currentUser);
 
   try {
     const res = await fetch('/api/upload-avatar', {
@@ -159,10 +147,11 @@ avatarFile.addEventListener('change', async () => {
     });
     const data = await res.json();
 
-    // tell others to reload image
-    socket.emit('avatar-updated', currentUser);
+    if (data.filename && data.username) {
+      localStorage.setItem(`avatar_${data.username}`, data.filename);
+    }
 
-    // reload image for me
+    socket.emit('avatar-updated', currentUser);
     loadMessages();
   } catch (err) {
     console.error('Upload failed:', err);
@@ -170,6 +159,5 @@ avatarFile.addEventListener('change', async () => {
 });
 
 socket.on('avatar-updated', (user) => {
-  // others refresh pfp
   loadMessages();
 });
