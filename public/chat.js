@@ -1,10 +1,10 @@
 const socket = io();
 let currentUser = null;
 
+// sets constants based on ids used in index.html
 const avatarForm = document.getElementById('avatarForm');
 const triggerUpload = document.getElementById('triggerUpload');
 const avatarFile = document.getElementById('avatarFile');
-
 const loginPopup = document.getElementById('loginPopup');
 const loginBtn = document.getElementById('loginBtn');
 const usernameInput = document.getElementById('usernameInput');
@@ -14,18 +14,23 @@ const avatarBtn = document.getElementById('avatarButton');
 const avatarPopup = document.getElementById('avatarPopup');
 const closePopupBtn = document.getElementById('closeAvatarPopup');
 
+// login logic:
 loginBtn.addEventListener('click', () => {
+  // takes in given username
   const name = usernameInput.value.trim();
   if (!name) return;
 
   currentUser = name;
   localStorage.setItem('username', name);
+  // sets user as online
   socket.emit('user-online', name);
 
+  // hides login popup, shows chat and profile button
   loginPopup.style.display = 'none';
   chatContainer.style.display = 'flex';
   avatarBtn.style.display = 'block';
 
+  // tries to set custom pfp
   const avatarFile = `${currentUser.toLowerCase().replace(/[^a-z0-9]/gi, '_')}.png`;
   avatarBtn.style.backgroundImage = `url('/uploads/${avatarFile}?${Date.now()}')`;
   avatarBtn.style.backgroundSize = 'cover';
@@ -34,37 +39,54 @@ loginBtn.addEventListener('click', () => {
   loadMessages();
 });
 
+// logout button clears username and reload page
 logoutBtn.addEventListener('click', () => {
   socket.emit('user-offline', currentUser);
   localStorage.removeItem('username');
   location.reload();
 });
 
+// sets user as offline before reloading/unloading the page
 window.addEventListener('beforeunload', () => {
   socket.emit('user-offline', currentUser);
 });
 
+// message showing logic:
 function renderMessages(messages) {
+  // clears the box
   chatBox.innerHTML = '';
+  // loops through the array with all the messages
   messages.forEach((msg, index) => {
     const messageEl = document.createElement('div');
-    messageEl.className = msg.user === currentUser ? 'message right' : 'message left';
+    // determines if the message should be on the left or right
+    //messageEl.className = msg.user === currentUser ? 'message right' : 'message left';
 
+    if(msg.user === currentUser){
+      massageEl.className = 'message right'
+    } else {
+      massageEl.className = 'message left'
+    }
+
+    // makes chat bubble element with text inside
     const bubble = document.createElement('div');
     bubble.className = 'bubble';
     bubble.innerText = msg.text;
     messageEl.appendChild(bubble);
 
+    // show avatar logic:
     const isLastInGroup = index === messages.length - 1 || messages[index + 1].user !== msg.user;
     if (isLastInGroup) {
+      // creates avatar element
       const avatar = document.createElement('div');
       avatar.className = 'avatar';
 
+      // sets photo to custom photo
       const avatarFile = `${msg.user.toLowerCase().replace(/[^a-z0-9]/gi, '_')}.png`;
       avatar.style.backgroundImage = `url('/uploads/${avatarFile}?${Date.now()}')`;
       avatar.style.backgroundSize = 'cover';
       avatar.style.backgroundPosition = 'center';
-
+      
+      // add usrname
       const label = document.createElement('div');
       label.innerText = msg.user;
       label.style.fontSize = '12px';
@@ -74,24 +96,30 @@ function renderMessages(messages) {
 
     chatBox.appendChild(messageEl);
   });
-
+  // after loading all message, scroll to bottom of chat
   chatBox.scrollTop = chatBox.scrollHeight;
 }
 
+// provides the message data for renderMessages
 async function loadMessages() {
   try {
     const res = await fetch('/api/messages');
     const data = await res.json();
     renderMessages(data);
   } catch (err) {
-    console.error('Failed to load messages:', err);
+    // thankfully hasnt happened so for pls dont happen bro
+    console.error('Failed to load messages: ', err);
   }
 }
 
+// send button logic:
 sendBtn.addEventListener('click', async () => {
+  // removes unnessary spaces
   const text = messageInput.value.trim();
+  // in case user status is glitched
   if (!text || !currentUser) return;
 
+  // sends message data (username and text) to the server
   try {
     await fetch('/api/messages', {
       method: 'POST',
@@ -100,7 +128,7 @@ sendBtn.addEventListener('click', async () => {
     });
     messageInput.value = '';
   } catch (err) {
-    console.error('Failed to send message:', err);
+    console.error('Failed to send message: ', err);
   }
 });
 
