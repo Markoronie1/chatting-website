@@ -85,7 +85,7 @@ function renderMessages(messages) {
 
       // sets photo to custom photo
       const avatarFile = `${msg.user.toLowerCase().replace(/[^a-z0-9]/gi, '_')}.png`;
-      avatar.style.backgroundImage = `url('/uploads/${avatarFile}?${Date.now()}')`;
+      avatar.style.backgroundImage = `url('/uploads/${avatarFile}')`;
       avatar.style.backgroundSize = 'cover';
       avatar.style.backgroundPosition = 'center';
       

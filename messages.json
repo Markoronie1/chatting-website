@@ -1,14 +1,6 @@
 [
   {
-    "user": "user1",
-    "text": "asd"
-  },
-  {
-    "user": "user1",
-    "text": "asd"
-  },
-  {
-    "user": "user1",
-    "text": "asd"
+    "user": "admin",
+    "text": "Hello"
   }
 ]

@@ -90,7 +90,7 @@ const upload = multer({
   }
 }).single('avatar');
 
-// file upload endpoint
+// file upload logic:
 app.post('/api/upload-avatar', (req, res) => {
   upload(req, res, async (err) => {
     if (err) {
