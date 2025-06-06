@@ -13,6 +13,7 @@ const chatContainer = document.querySelector('.chat-container');
 const avatarBtn = document.getElementById('avatarButton');
 const avatarPopup = document.getElementById('avatarPopup');
 const closePopupBtn = document.getElementById('closeAvatarPopup');
+const emojiBtn = document.getElementById('emojiBtn');
 const avatarVersion = {};
 
 // login logic:
@@ -115,6 +116,13 @@ async function loadMessages() {
     console.error('Failed to load messages: ', err);
   }
 }
+
+// emoji button logic:
+emojiBtn.addEventListener('click', () => {
+  // when the emoji is clicked, add the emoji to the end of the message and put the cursor back
+  messageInput.value += '😊';
+  messageInput.focus();
+})
 
 // send button logic:
 sendBtn.addEventListener('click', async () => {
