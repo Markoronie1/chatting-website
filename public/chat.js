@@ -62,9 +62,9 @@ function renderMessages(messages) {
     //messageEl.className = msg.user === currentUser ? 'message right' : 'message left';
 
     if(msg.user === currentUser){
-      massageEl.className = 'message right'
+      messageEl.className = 'message right'
     } else {
-      massageEl.className = 'message left'
+      messageEl.className = 'message left'
     }
 
     // makes chat bubble element with text inside
