@@ -59,8 +59,6 @@ function renderMessages(messages) {
   messages.forEach((msg, index) => {
     const messageEl = document.createElement('div');
     // determines if the message should be on the left or right
-    //messageEl.className = msg.user === currentUser ? 'message right' : 'message left';
-
     if(msg.user === currentUser){
       messageEl.className = 'message right'
     } else {
@@ -74,7 +72,12 @@ function renderMessages(messages) {
     messageEl.appendChild(bubble);
 
     // show avatar logic:
-    const isLastInGroup = index === messages.length - 1 || messages[index + 1].user !== msg.user;
+    
+    
+    if(index === messages.length -1 || messages[index + 1].user !== msg.user){
+      isLastInGroup = true;
+    }
+
     if (isLastInGroup) {
       // creates avatar element
       const avatar = document.createElement('div');
