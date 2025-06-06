@@ -73,7 +73,7 @@ function renderMessages(messages) {
 
     // show avatar logic:
     
-    
+    let isLastInGroup = false;
     if(index === messages.length -1 || messages[index + 1].user !== msg.user){
       isLastInGroup = true;
     }
