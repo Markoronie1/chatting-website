@@ -13,6 +13,7 @@ const chatContainer = document.querySelector('.chat-container');
 const avatarBtn = document.getElementById('avatarButton');
 const avatarPopup = document.getElementById('avatarPopup');
 const closePopupBtn = document.getElementById('closeAvatarPopup');
+const avatarVersion = {};
 
 // login logic:
 loginBtn.addEventListener('click', () => {
@@ -85,7 +86,8 @@ function renderMessages(messages) {
 
       // sets photo to custom photo
       const avatarFile = `${msg.user.toLowerCase().replace(/[^a-z0-9]/gi, '_')}.png`;
-      avatar.style.backgroundImage = `url('/uploads/${avatarFile}')`;
+      const version = avatarVersion[msg.user] ? `?v=${avatarVersion[msg.user]}` : '';
+      avatar.style.backgroundImage = `url('/uploads/${avatarFile}${version}')`;
       avatar.style.backgroundSize = 'cover';
       avatar.style.backgroundPosition = 'center';
       
@@ -221,5 +223,6 @@ avatarFile.addEventListener('change', async () => {
 
 // when notified that an avatar is changed, reload the messages
 socket.on('avatar-updated', (user) => {
+  avatarVersion[user] = Date.now();
   loadMessages();
 });
