@@ -81,13 +81,12 @@ const storage = multer.memoryStorage(); // use memory storage so sharp can acc p
 const upload = multer({
   storage,
   fileFilter: (req, file, cb) => {
-    const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-    if (allowedTypes.includes(file.mimetype)) {
-      cb(null, true);
-    } else {
-      cb(new Error('Only PNG and JPEG files are allowed.'));
-    }
+  if (file.mimetype.startsWith('image/')) {
+    cb(null, true);
+  } else {
+    cb(new Error('Only image files are allowed.'));
   }
+}
 }).single('avatar');
 
 // file upload logic:
