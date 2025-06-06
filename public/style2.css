@@ -157,8 +157,7 @@ input[type="text"]::placeholder {
   object-fit: contain;
 }
 
-
-
+/* popups */
 .popup {
   position: fixed;
   top: 0;
@@ -198,6 +197,7 @@ input[type="text"]::placeholder {
   cursor: pointer;
 }
 
+/* avatar stuff */
 .avatar-button {
   position: fixed;
   top: 20px;
@@ -228,7 +228,7 @@ input[type="text"]::placeholder {
   gap: 10px;
 }
 
-.styled-btn {
+.styled-button {
   padding: 10px 20px;
   background: var(--blue);
   color: white;

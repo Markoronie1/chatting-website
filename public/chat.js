@@ -32,6 +32,7 @@ loginBtn.addEventListener('click', () => {
 
   // tries to set custom pfp
   const avatarFile = `${currentUser.toLowerCase().replace(/[^a-z0-9]/gi, '_')}.png`;
+  // Date.now() forces the browser to use this version instead of anything saved in the cache
   avatarBtn.style.backgroundImage = `url('/uploads/${avatarFile}?${Date.now()}')`;
   avatarBtn.style.backgroundSize = 'cover';
   avatarBtn.style.backgroundPosition = 'center';
@@ -109,7 +110,6 @@ async function loadMessages() {
     const data = await res.json();
     renderMessages(data);
   } catch (err) {
-    // thankfully hasnt happened so for pls dont happen bro
     console.error('Failed to load messages: ', err);
   }
 }
@@ -118,8 +118,6 @@ async function loadMessages() {
 sendBtn.addEventListener('click', async () => {
   // removes unnessary spaces
   const text = messageInput.value.trim();
-  // in case user status is glitched
-  if (!text || !currentUser) return;
 
   // sends message data (username and text) to the server
   try {
@@ -134,17 +132,22 @@ sendBtn.addEventListener('click', async () => {
   }
 });
 
+// if the enter key is pressed, does the same thing as if the send button were clicked
 messageInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') sendBtn.click();
 });
 
+// reloads all message when a new one is sent
 socket.on('new-message', () => loadMessages());
 
+// website loading logic:
 window.addEventListener('load', () => {
+  // allows for username to be stored, not have to log in every time
   const savedUser = localStorage.getItem('username');
   if (savedUser) {
     currentUser = savedUser;
     socket.emit('user-online', savedUser);
+    // shows log in popup, hides rest of UI
     loginPopup.style.display = 'none';
     chatContainer.style.display = 'flex';
     avatarBtn.style.display = 'block';
@@ -160,35 +163,46 @@ window.addEventListener('load', () => {
   }
 });
 
+// when avatar button is clicked, show/hide the popup
 avatarBtn.addEventListener('click', () => {
-  avatarPopup.style.display = avatarPopup.style.display === 'none' ? 'block' : 'none';
+  if(avatarPopup.style.display === 'none'){
+    avatarPopup.style.display = 'block';
+  } else {
+    avatarPopup.style.display = 'none';
+  }
 });
 
+// close the profile popup
 closePopupBtn.addEventListener('click', () => {
   avatarPopup.style.display = 'none';
 });
 
+// "clicks" the invisible upload button
 triggerUpload.addEventListener('click', () => {
   avatarFile.click();
 });
 
+// when user picks a file:
 avatarFile.addEventListener('change', async () => {
   const file = avatarFile.files[0];
-  if (!file || !currentUser) return;
 
   document.getElementById('uploadUsername').value = currentUser;
 
+  // contains username and the avatar file
   const formData = new FormData(document.getElementById('avatarForm'));
 
   console.log('Uploading avatar for', currentUser);
 
+  // sends the formData to the server
   try {
     const res = await fetch('/api/upload-avatar', {
       method: 'POST',
       body: formData
     });
+    // server responds with message, filename, and username
     const data = await res.json();
 
+    // if this applies to the current user, set their avatar to this new file
     if (data.filename && data.username) {
       if (data.username === currentUser) {
         avatarBtn.style.backgroundImage = `url('/uploads/${data.filename}?${Date.now()}')`;
@@ -197,6 +211,7 @@ avatarFile.addEventListener('change', async () => {
       }
     }
 
+    // notifies the server that the user's avatar was updated
     socket.emit('avatar-updated', currentUser);
     loadMessages();
   } catch (err) {
@@ -204,6 +219,7 @@ avatarFile.addEventListener('change', async () => {
   }
 });
 
+// when notified that an avatar is changed, reload the messages
 socket.on('avatar-updated', (user) => {
   loadMessages();
 });
