@@ -16,7 +16,7 @@ const io = socketIO(server);
 const PORT = 3000;
 
 // message sending stuff
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({extended: true}));
 app.use(express.json());
 app.use(express.static('public'));
 
