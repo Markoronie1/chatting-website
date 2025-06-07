@@ -133,8 +133,8 @@ sendBtn.addEventListener('click', async () => {
   try {
     await fetch('/api/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user: currentUser, text })
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({user: currentUser, text})
     });
     messageInput.value = '';
   } catch (err) {

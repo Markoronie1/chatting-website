@@ -53,12 +53,12 @@ io.on('connection', (socket) => {
 
   socket.on('user-online', (username) => {
     usersOnline.add(username);
-    io.emit('user-status', { user: username, status: 'online' });
+    io.emit('user-status', {user: username, status: 'online'});
   });
 
   socket.on('user-offline', (username) => {
     usersOnline.delete(username);
-    io.emit('user-status', { user: username, status: 'offline' });
+    io.emit('user-status', {user: username, status: 'offline'});
   });
 
   socket.on('disconnect', () => {
@@ -73,7 +73,7 @@ io.on('connection', (socket) => {
 // file storage stuff
 const uploadDir = path.join(__dirname, 'public', 'uploads');
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+  fs.mkdirSync(uploadDir, {recursive: true});
 }
 
 const storage = multer.memoryStorage(); // use memory storage so sharp can acc process it
@@ -105,7 +105,7 @@ app.post('/api/upload-avatar', (req, res) => {
     try {
       await sharp(req.file.buffer)
       //converts to a 128x128 png
-        .resize(128, 128, { fit: 'cover' })
+        .resize(128, 128, {fit: 'cover'})
         .png()
         .toFile(filePath);
 
@@ -120,7 +120,7 @@ app.post('/api/upload-avatar', (req, res) => {
       });
     } catch (error) {
       console.error('Sharp processing error:', error);
-      res.status(500).json({ error: 'Image processing failed' });
+      res.status(500).json({error: 'Image processing failed'});
     }
   });
 });
